@@ -1,0 +1,48 @@
+{{template "header.html" .}}
+<script type="text/javascript">
+	function del (file) {
+		alert(file);
+		// $.ajax({
+		// 	type:"POST",
+		// 	data:{name:file},
+		// 	url:"/delfile",
+		// 	success:function (ret) {
+		// 		alert(ret);
+		// 	}
+		// });
+		$.ajax({
+		 url: '/delfile',
+		 type: 'GET',
+		 success: function(result) {
+		  // Do something with the result
+		  alert(result);
+		 }
+		});
+	}
+
+</script>
+<br>
+<br>
+<div class="container">
+<!-- <h3>DIRS</h3> -->
+<ul>
+	{{range .dirs}}
+		<li>
+			<a href="/list/{{.}}">{{.}}</a>.
+			<!-- <a href="" onclick="del({{.}})">del</a> -->
+		</li>
+	{{end}}
+</ul>
+
+<br><hr>
+<!-- <h4>FILES</h4> -->
+<ul>
+	{{range .files}}
+		<li>
+			<a href="/loadfile/{{.}}">{{.}}</a>.
+			<!-- <a href="" onclick="del({{.}})">del</a> -->
+		</li>
+	{{end}}
+</ul>
+</div>
+{{template "footer.html" .}}
