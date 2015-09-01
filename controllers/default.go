@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/astaxie/beego"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	"github.com/astaxie/beego"
 )
 
 type MainController struct {
@@ -84,20 +85,15 @@ func (c *MainController) ListFile() {
 	c.TplNames = "list.html"
 }
 
-// @router /delfile [get]
+// @router /delfile/* [*]
 func (c *MainController) DeleteFile() {
-	beego.Debug("delfile...")
-	var file file
-	err := c.ParseForm(&file)
-	if checkerr(err) {
-		c.Ctx.WriteString(err.Error())
-	}
+	file := c.Ctx.Input.Param(":splat")
 	beego.Debug(file)
-	err = os.RemoveAll(file.Name)
+	err := os.RemoveAll("./static/" + file)
 	if checkerr(err) {
 		c.Ctx.WriteString(err.Error())
 	}
-	c.Redirect("/", 302)
+	c.Ctx.WriteString(`{"ret":"success"}`)
 }
 
 // @router /upload/* [*]
@@ -133,8 +129,4 @@ func checkerr(err error) bool {
 		return true
 	}
 	return false
-}
-
-type file struct {
-	Name string `form:"name"`
 }

@@ -1,18 +1,9 @@
 {{template "header.html" .}}
 <script type="text/javascript">
 	function del (file) {
-		alert(file);
-		// $.ajax({
-		// 	type:"POST",
-		// 	data:{name:file},
-		// 	url:"/delfile",
-		// 	success:function (ret) {
-		// 		alert(ret);
-		// 	}
-		// });
 		$.ajax({
-		 url: '/delfile',
-		 type: 'GET',
+		 url: '/delfile/'+file,
+		 type: 'DELETE',
 		 success: function(result) {
 		  // Do something with the result
 		  alert(result);
@@ -28,8 +19,8 @@
 <ul>
 	{{range .dirs}}
 		<li>
-			<a href="/list/{{.}}">{{.}}</a>.
-			<!-- <a href="" onclick="del({{.}})">del</a> -->
+			<a href="/list/{{.}}">{{.}}</a>
+			<label onclick="del({{.}})">DEL</label>
 		</li>
 	{{end}}
 </ul>
@@ -39,8 +30,8 @@
 <ul>
 	{{range .files}}
 		<li>
-			<a href="/loadfile/{{.}}">{{.}}</a>.
-			<!-- <a href="" onclick="del({{.}})">del</a> -->
+			<a href="/loadfile/{{.}}">{{.}}</a>
+			<label onclick="del({{.}})">DEL</label>
 		</li>
 	{{end}}
 </ul>
