@@ -14,7 +14,8 @@ func TestT(t *testing.T) {
 	if checkerr(err) {
 		return
 	}
-	req := httplib.Put("http://localhost:8080/upload/tests/upload_test.go")
+	// req := httplib.Put("http://localhost:8080/upload/tests/upload_test.go")
+	req := httplib.Put("http://upload.daoapp.io/upload/a/upload_test.go")
 	req.Body(b)
 	resp, err := req.Response()
 	if checkerr(err) {
