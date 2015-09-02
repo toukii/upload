@@ -6,46 +6,45 @@
 		 type: 'DELETE',
 		 success: function(result) {
 		  // Do something with the result
-		  alert(result);
+		  // alert(result);
+		  window.location.href = "/list/a";
 		 }
 		});
 	}
 
 	function down (file) {
-		$.ajax({
-		 url: '/download/'+file,
-		 type: 'GET',
-		 success: function(result) {
-		  // Do something with the result
-		  alert(result);
-		 }
-		});
+		window.location.href = '/download/'+file;
 	}
 
 </script>
 <br>
 <br>
-<div class="container">
-<!-- <h3>DIRS</h3> -->
-<ul>
-	{{range .dirs}}
-		<li>
-			<a href="/list/{{.}}">{{.}}</a>
-			<label onclick="dlt({{.}})">DELETE</label>
-		</li>
-	{{end}}
-</ul>
-
-<br><hr>
-<!-- <h4>FILES</h4> -->
-<ul>
-	{{range .files}}
-		<li>
-			<a href="/loadfile/{{.}}">{{.}}</a>
-			<label onclick="dlt({{.}})">DELETE</label> /
-			<label onclick="down({{.}})">DOWNLOAD</label>
-		</li>
-	{{end}}
-</ul>
+ <div class="container projects">
+    <div class="row">
+      {{range .dirs}}
+            <div class="col-sm-3 col-md-2 col-lg-2">
+            <div class="thumbnail">
+              <a href="/list/{{.}}">{{.}}</a>
+              	<br>
+              	<hr>
+                <label onclick="dlt({{.}})">DELETE</label>
+            </div>
+          </div>
+      {{end}}
+	</div>
+    <div class="row">
+      {{range .files}}
+            <div class="col-sm-3 col-md-2 col-lg-2">
+            <div class="thumbnail">
+              <a href="/list/{{.}}">{{.}}</a>
+              	<br>
+              	<hr>
+              	<label onclick="down({{.}})">DOWNLOAD</label><hr>
+                <label onclick="dlt({{.}})">DELETE</label>
+            </div>
+          </div>
+      {{end}}
+	</div>
 </div>
+
 {{template "footer.html" .}}

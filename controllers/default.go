@@ -14,6 +14,12 @@ type MainController struct {
 }
 
 // @router / [get]
+func (c *MainController) Home() {
+	// c.TplNames = "upload.html"
+	c.Redirect("/list/a", 302)
+}
+
+// @router /upload [get]
 func (c *MainController) LoadUpload() {
 	c.TplNames = "upload.html"
 }
@@ -27,8 +33,7 @@ func (c *MainController) UploadForm() {
 			beego.Error(serr)
 			c.Ctx.WriteString(serr.Error())
 		}
-		c.Ctx.ResponseWriter.Write([]byte("http://localhost:8080/download/" + file.Filename))
-		return
+		c.Redirect("/list/a", 302)
 	}
 	beego.Error(err)
 	c.Ctx.WriteString(err.Error())
@@ -96,31 +101,37 @@ func (c *MainController) DeleteFile() {
 	c.Ctx.WriteString(`{"ret":"success"}`)
 }
 
-// @router /upload/* [*]
+// @router /upload/* [post,put]
 func (c *MainController) Upload() {
 	rw := c.Ctx.ResponseWriter
 	req := c.Ctx.Request
 	if req.Method == "GET" {
 		rw.Write([]byte(""))
 	}
-	req.ParseForm()
-	length := req.Header.Get("Content-Length")
-	fmt.Println(length)
+	// req.ParseForm()
+	// length := req.Header.Get("Content-Length")
+	// fmt.Println(length)
 	b, err := ioutil.ReadAll(req.Body)
 	if checkerr(err) {
-		rw.Write([]byte("error"))
+		rw.Write([]byte(err.Error()))
 	}
 	filename := c.Ctx.Input.Param(":splat")
 	beego.Debug(filename)
+	dir := filepath.Dir(filename)
+	beego.Info(dir)
+	_, err = os.Stat("./static/" + dir)
+	if checkerr(err) {
+		os.MkdirAll("./static/"+dir, 0777)
+	}
 	file, err := os.OpenFile("./static/"+filename, os.O_CREATE|os.O_WRONLY, 0644)
 	if checkerr(err) {
-		rw.Write([]byte("error"))
+		rw.Write([]byte(err.Error()))
 	}
 	_, err = file.Write(b)
 	if checkerr(err) {
 		rw.Write([]byte("error"))
 	}
-	rw.Write([]byte("http://localhost:8080/download/" + filename))
+	rw.Write([]byte("http://upload.daoapp.io/download/" + filename))
 }
 
 func checkerr(err error) bool {
