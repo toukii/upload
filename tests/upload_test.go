@@ -10,12 +10,12 @@ import (
 
 func TestT(t *testing.T) {
 
-	b, err := ioutil.ReadFile("upload_test.go")
+	b, err := ioutil.ReadFile("C 学习笔记.pdf")
 	if checkerr(err) {
 		return
 	}
 	// req := httplib.Put("http://localhost:8080/upload/tests/upload_test.go")
-	req := httplib.Put("http://upload.daoapp.io/upload/a/upload_test.go")
+	req := httplib.Put("http://upload.daoapp.io/upload/qyuhen/C 学习笔记.pdf")
 	req.Body(b)
 	resp, err := req.Response()
 	if checkerr(err) {
