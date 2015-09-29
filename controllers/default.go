@@ -92,6 +92,7 @@ func (c *MainController) ListFile() {
 
 // @router /delfile/* [*]
 func (c *MainController) DeleteFile() {
+	return
 	file := c.Ctx.Input.Param(":splat")
 	beego.Debug(file)
 	err := os.RemoveAll("./static/" + file)
