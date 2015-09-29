@@ -1,15 +1,15 @@
 {{template "header.html" .}}
 <script type="text/javascript">
 	function dlt (file) {
-		// $.ajax({
-		//  url: '/delfile/'+file,
-		//  type: 'DELETE',
-		//  success: function(result) {
-		//   // Do something with the result
-		//   // alert(result);
-		//   window.location.href = "/list/a";
-		//  }
-		// });
+		$.ajax({
+		 url: '/delfile/'+file,
+		 type: 'DELETE',
+		 success: function(result) {
+		  // Do something with the result
+		  // alert(result);
+		  window.location.href = "/list/a";
+		 }
+		});
 	}
 
 	function down (file) {
