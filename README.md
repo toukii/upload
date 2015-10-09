@@ -1,5 +1,3 @@
 #upload
 
-## service
-
-[file up/download](http://upload.daoapp.io)
+[upload](http://upload.daoapp.io)
