@@ -33,15 +33,15 @@
       {{end}}
 	</div>
     <div class="row">
-      {{range .files}}
-            <div class="col-sm-3 col-md-2 col-lg-2">
+      {{range .fileviews}}
+            <div class="col-sm-2 col-md-6 col-lg-6">
             <div class="thumbnail">
-              <a href="/loadfile/{{.}}">{{.}}</a>
-              	<br>
+              <a href="/loadfile/{{.Name}}">{{.Name}}</a>
               	<hr>
-              	<label onclick="down({{.}})">DOWNLOAD</label><hr>
-                <label onclick="dlt({{.}})">DELETE</label>
-            </div>
+              	<label onclick="down({{.Name}})">DOWNLOAD</label><hr>
+                <label onclick="dlt({{.Name}})">DELETE</label><hr>
+              <textarea cols="60" rows="10">{{.Content}}</textarea>
+            </div>            
           </div>
       {{end}}
 	</div>

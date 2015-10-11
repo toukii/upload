@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"fmt"
+	"github.com/shaalx/goutils"
+	// "html/template"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -55,6 +57,7 @@ func (c *MainController) LoadFile() {
 		beego.Error(err)
 		c.Ctx.WriteString(err.Error())
 	} else {
+		defer file.Close()
 		if b, err := ioutil.ReadAll(file); err != nil {
 			beego.Error(err)
 			c.Ctx.WriteString(err.Error())
@@ -62,6 +65,11 @@ func (c *MainController) LoadFile() {
 			c.Ctx.Output.Body(b)
 		}
 	}
+}
+
+type FileView struct {
+	Name    string
+	Content string
 }
 
 // @router /list/* [get]
@@ -77,16 +85,23 @@ func (c *MainController) ListFile() {
 		c.Ctx.WriteString(err.Error())
 	}
 	dirs := make([]string, 0, len(fs))
-	files := make([]string, 0, len(fs))
+	fileviews := make([]FileView, 0, len(fs))
 	for _, it := range fs {
 		if it.IsDir() {
 			dirs = append(dirs, filepath.Join(pathname, it.Name()))
 			continue
 		}
-		files = append(files, filepath.Join(pathname, it.Name()))
+		name := filepath.Join(pathname, it.Name())
+		content := readFile(name)
+		// content := template.HTMLEscaper(readFile(name))
+		// contv := template.HTML(content)
+		// fmt.Println(contv)
+
+		fileview := FileView{Name: name, Content: content}
+		fileviews = append(fileviews, fileview)
 	}
 	c.Data["dirs"] = dirs
-	c.Data["files"] = files
+	c.Data["fileviews"] = fileviews
 	c.TplNames = "list.html"
 }
 
@@ -105,33 +120,15 @@ func (c *MainController) DeleteFile() {
 func (c *MainController) Upload() {
 	rw := c.Ctx.ResponseWriter
 	req := c.Ctx.Request
-	if req.Method == "GET" {
-		rw.Write([]byte(""))
-	}
-	// req.ParseForm()
-	// length := req.Header.Get("Content-Length")
-	// fmt.Println(length)
+	// if req.Method == "GET" {
+	// 	return
+	// }
 	b, err := ioutil.ReadAll(req.Body)
 	if checkerr(err) {
 		rw.Write([]byte(err.Error()))
 	}
 	filename := c.Ctx.Input.Param(":splat")
-	beego.Debug(filename)
-	dir := filepath.Dir(filename)
-	beego.Info(dir)
-	_, err = os.Stat("./static/" + dir)
-	if checkerr(err) {
-		os.MkdirAll("./static/"+dir, 0777)
-	}
-	file, err := os.OpenFile("./static/"+filename, os.O_CREATE|os.O_WRONLY, 0644)
-	if checkerr(err) {
-		rw.Write([]byte(err.Error()))
-	}
-	_, err = file.Write(b)
-	if checkerr(err) {
-		rw.Write([]byte("error"))
-	}
-	rw.Write([]byte("http://upload.daoapp.io/download/" + filename))
+	createFile(filename, goutils.ToString(b))
 }
 
 // @router /topic [get]
@@ -163,6 +160,20 @@ func createFile(filename, content string) error {
 	}
 	_, err = file.WriteString(content)
 	return err
+}
+
+func readFile(filename string) string {
+	file, err := os.Open("./static/" + filename)
+	defer file.Close()
+	if err != nil {
+		return err.Error()
+	} else {
+		b, err := ioutil.ReadAll(file)
+		if err != nil {
+			return err.Error()
+		}
+		return goutils.ToString(b)
+	}
 }
 
 func checkerr(err error) bool {
