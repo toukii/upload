@@ -134,6 +134,37 @@ func (c *MainController) Upload() {
 	rw.Write([]byte("http://upload.daoapp.io/download/" + filename))
 }
 
+// @router /topic [get]
+func (c *MainController) GTopic() {
+	c.TplNames = "topic.html"
+}
+
+// @router /topic [post]
+func (c *MainController) PTopic() {
+	req := c.Ctx.Request
+	req.ParseForm()
+	title := req.Form.Get("title")
+	content := req.Form.Get("content")
+	fmt.Println(content)
+	createFile(title, content)
+	c.Redirect("/", 302)
+}
+
+func createFile(filename, content string) error {
+	dir := filepath.Dir(filename)
+	_, err := os.Stat("./static/" + dir)
+	if checkerr(err) {
+		os.MkdirAll("./static/"+dir, 0777)
+	}
+	file, err := os.OpenFile("./static/"+filename, os.O_CREATE|os.O_WRONLY, 0644)
+	defer file.Close()
+	if checkerr(err) {
+		return err
+	}
+	_, err = file.WriteString(content)
+	return err
+}
+
 func checkerr(err error) bool {
 	if err != nil {
 		fmt.Println(err)
