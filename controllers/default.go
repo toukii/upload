@@ -199,7 +199,6 @@ func (c *MainController) PTopic() {
 	req.ParseForm()
 	title := req.Form.Get("title")
 	content := req.Form.Get("content")
-	fmt.Println(content)
 	createFile(title, content)
 	c.Redirect("/", 302)
 }
