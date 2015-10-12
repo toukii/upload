@@ -28,7 +28,7 @@
       {{range .dirs}}
             <div class="col-sm-3 col-md-2 col-lg-2">
             <div class="thumbnail">
-              <a href="/list/{{.}}"><img src="http://7xku3c.com1.z0.glb.clouddn.com/dir.png">{{.}}</a><br><hr>
+              <a href="/list/{{.}}"><img src="http://7xku3c.com1.z0.glb.clouddn.com/dirs.png">{{.}}</a><br><hr>
                 <label onclick="up({{.}})">upload</label> &nbsp;&nbsp;
                 <label onclick="dlt({{.}})">delete</label>
             </div>
@@ -38,13 +38,16 @@
   <hr>
     <div class="row">
       {{range .fileviews}}
-            <div class="col-sm-3 col-md-2 col-lg-2">
+            <div class="col-sm-3 col-md-2 col-lg-3">
             <div class="thumbnail">
-              <a href="/loadfile/{{.Name}}">{{.Name}}</a>
-              	<hr>
+              <a href="/loadfile/{{.Name}}">
                 {{if .Img}}
                   <img src="{{.Img}}">
-                {{end}}<hr>
+                {{else}}
+                  <img src="http://7xku3c.com1.z0.glb.clouddn.com/file.png">
+                {{end}}
+                {{.Name}}</a>
+                <hr>
                 <label onclick="down({{.Name}})">download</label>&nbsp;&nbsp;
                 <label onclick="dlt({{.Name}})">delete</label><hr>
             </div>
