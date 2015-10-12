@@ -90,6 +90,34 @@ func (c *MainController) LoadFile() {
 	}
 }
 
+// @router /display/* [get]
+func (c *MainController) Display() {
+	filename := c.Ctx.Input.Param(":splat")
+	fileview := FileView{Name: filename}
+	filetypes := strings.Split(filename, ".")
+	fmt.Println(filetypes)
+	imged := false
+	if len(filetypes) > 1 {
+		if strings.Contains(".pdf", filetypes[1]) {
+			c.Redirect("/loadfile/"+filename, 302)
+		}
+		if strings.Contains(imgs, filetypes[1]) {
+			fileview.Img = "/loadfile/" + filename
+			imged = true
+		}
+	}
+	if !imged {
+		info, err := os.Stat("./static/" + filename)
+		fmt.Println(info, filename)
+		if nil == err && info.Size() < 1e6 {
+			fileview.Content = readFile(filename)
+		}
+	}
+	fmt.Println(fileview)
+	c.Data["file"] = fileview
+	c.TplNames = "display.html"
+}
+
 type FileView struct {
 	Name    string
 	Content string
