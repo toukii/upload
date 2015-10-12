@@ -26,6 +26,13 @@ func (c *MainController) LoadUpload() {
 	c.TplNames = "upload.html"
 }
 
+// @router /upload/* [get]
+func (c *MainController) LoadUploads() {
+	dir := c.Ctx.Input.Param(":splat")
+	c.Data["dir"] = dir
+	c.TplNames = "upload.html"
+}
+
 // @router /uploadform [post]
 func (c *MainController) UploadForm() {
 	_, file, err := c.GetFile("filename")

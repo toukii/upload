@@ -12,9 +12,13 @@
 		});
 	}
 
-	function down (file) {
-		window.location.href = '/download/'+file;
-	}
+  function down (file) {
+    window.location.href = '/download/'+file;
+  }
+
+  function up (file) {
+      	window.location.href = '/upload/'+file;
+  }
 
 </script>
 <br>
@@ -24,9 +28,8 @@
       {{range .dirs}}
             <div class="col-sm-3 col-md-2 col-lg-2">
             <div class="thumbnail">
-              <a href="/list/{{.}}">{{.}}</a>
-              	<br>
-              	<hr>
+              <a href="/list/{{.}}">{{.}}</a><br><hr>
+                <label onclick="up({{.}})">UPLOAD</label><hr>
                 <label onclick="dlt({{.}})">DELETE</label>
             </div>
           </div>
