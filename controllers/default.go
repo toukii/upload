@@ -18,7 +18,7 @@ type MainController struct {
 // @router / [get]
 func (c *MainController) Home() {
 	// c.TplNames = "upload.html"
-	c.Redirect("/list/a", 302)
+	c.Redirect("/list/_home", 302)
 }
 
 // @router /upload [get]
@@ -42,7 +42,7 @@ func (c *MainController) UploadForm() {
 			beego.Error(serr)
 			c.Ctx.WriteString(serr.Error())
 		}
-		c.Redirect("/list/a", 302)
+		c.Redirect("/list/_home", 302)
 	}
 	beego.Error(err)
 	c.Ctx.WriteString(err.Error())
@@ -113,7 +113,7 @@ func (c *MainController) Display() {
 			fileview.Content = readFile(filename)
 		}
 	}
-	fmt.Println(fileview)
+	c.Data["dir"] = filepath.Dir(filename)
 	c.Data["file"] = fileview
 	c.TplNames = "display.html"
 }
@@ -133,7 +133,7 @@ func (c *MainController) ListFile() {
 	beego.Debug(c.Ctx.Request.RequestURI)
 	pathname := c.Ctx.Input.Param(":splat")
 	beego.Debug(pathname)
-	if "a" == pathname {
+	if "_home" == pathname {
 		pathname = ""
 	}
 	fs, err := ioutil.ReadDir("./static/" + pathname)
@@ -157,6 +157,7 @@ func (c *MainController) ListFile() {
 		}
 		fileviews = append(fileviews, fileview)
 	}
+	c.Data["dir"] = pathname
 	c.Data["dirs"] = dirs
 	c.Data["fileviews"] = fileviews
 	c.TplNames = "list.html"
@@ -168,9 +169,14 @@ func (c *MainController) DeleteFile() {
 	beego.Debug(file)
 	err := os.RemoveAll("./static/" + file)
 	if checkerr(err) {
-		c.Ctx.WriteString(err.Error())
+		c.Ctx.WriteString(file)
+		return
 	}
-	c.Ctx.WriteString(`{"ret":"success"}`)
+	dir := filepath.Dir(file)
+	if len(dir) <= 1 {
+		dir = "_home"
+	}
+	c.Ctx.WriteString(dir)
 }
 
 // @router /upload/* [post,put]
@@ -191,6 +197,24 @@ func (c *MainController) Upload() {
 // @router /topic [get]
 func (c *MainController) GTopic() {
 	c.TplNames = "topic.html"
+}
+
+// @router /topic/* [get]
+func (c *MainController) GTopics() {
+	c.Data["dir"] = c.Ctx.Input.Param(":splat")
+	c.TplNames = "topic.html"
+}
+
+// @router /topic/* [post]
+func (c *MainController) PTopics() {
+	dir := c.Ctx.Input.Param(":splat")
+	req := c.Ctx.Request
+	req.ParseForm()
+	title := req.Form.Get("title")
+	content := req.Form.Get("content")
+	createFile(dir+"/"+title, content)
+	fmt.Println(dir, filepath.Dir(dir))
+	c.Redirect("/list/"+dir, 302)
 }
 
 // @router /topic [post]

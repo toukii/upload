@@ -5,7 +5,8 @@
 	<h4><font color="white">{{.file.Name}}</font></h4>
 	{{if .file.Content}}
 		<textarea name="content" rows="24" cols="99">{{.file.Content}}</textarea>
-	{{else}}
+	{{end}}
+	{{if .file.Img}}
 		<img src="{{.file.Img}}">
 	{{end}}
 </div>
