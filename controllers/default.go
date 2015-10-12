@@ -45,7 +45,7 @@ func (c *MainController) UploadForm() {
 		c.Redirect("/list/_home", 302)
 	}
 	beego.Error(err)
-	c.Ctx.WriteString(err.Error())
+	c.Redirect("/list/_home", 302)
 }
 
 // @router /uploadform/* [post]
@@ -61,7 +61,7 @@ func (c *MainController) DirUploadForm() {
 		c.Redirect("/list/"+dir, 302)
 	}
 	beego.Error(err)
-	c.Ctx.WriteString(err.Error())
+	c.Redirect("/list/"+dir, 302)
 }
 
 // @router /download/* [get]
@@ -90,12 +90,21 @@ func (c *MainController) LoadFile() {
 	}
 }
 
+// @router /display/* [post]
+func (c *MainController) PostDisplay() {
+	file := c.Ctx.Input.Param(":splat")
+	req := c.Ctx.Request
+	req.ParseForm()
+	content := req.Form.Get("content")
+	createFile(file, content)
+	c.Redirect("/display/"+file, 302)
+}
+
 // @router /display/* [get]
 func (c *MainController) Display() {
 	filename := c.Ctx.Input.Param(":splat")
 	fileview := FileView{Name: filename}
 	filetypes := strings.Split(filename, ".")
-	fmt.Println(filetypes)
 	imged := false
 	if len(filetypes) > 1 {
 		if strings.Contains(".pdf", filetypes[1]) {
@@ -108,10 +117,13 @@ func (c *MainController) Display() {
 	}
 	if !imged {
 		info, err := os.Stat("./static/" + filename)
-		fmt.Println(info, filename)
 		if nil == err && info.Size() < 1e6 {
 			fileview.Content = readFile(filename)
+			if len(fileview.Content) < 1 {
+				fileview.Content = " "
+			}
 		}
+
 	}
 	c.Data["dir"] = filepath.Dir(filename)
 	c.Data["file"] = fileview
@@ -230,9 +242,10 @@ func (c *MainController) PTopic() {
 func createFile(filename, content string) error {
 	dir := filepath.Dir(filename)
 	_, err := os.Stat("./static/" + dir)
-	if checkerr(err) {
-		os.MkdirAll("./static/"+dir, 0777)
+	if !checkerr(err) {
+		os.Remove("./static/" + dir)
 	}
+	os.MkdirAll("./static/"+dir, 0777)
 	file, err := os.OpenFile("./static/"+filename, os.O_CREATE|os.O_WRONLY, 0644)
 	defer file.Close()
 	if checkerr(err) {
