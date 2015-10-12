@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/astaxie/beego"
 )
@@ -99,10 +100,10 @@ func (c *MainController) ListFile() {
 			continue
 		}
 		name := filepath.Join(pathname, it.Name())
-		content := readFile(name)
-		// content := template.HTMLEscaper(readFile(name))
-		// contv := template.HTML(content)
-		// fmt.Println(contv)
+		content := ""
+		if it.Size() < 1e6 && (strings.HasSuffix(name, ".go") || strings.HasSuffix(name, ".java") || strings.HasSuffix(name, ".cpp") || strings.HasSuffix(name, ".md")) {
+			content = readFile(name)
+		}
 
 		fileview := FileView{Name: name, Content: content}
 		fileviews = append(fileviews, fileview)
