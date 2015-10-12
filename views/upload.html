@@ -1,17 +1,10 @@
 {{template "header.html" .}}
-<script type="text/javascript">
-	function upload_submit (dir) {
-		var name = $("#filename").value;
-		$("#filename").value(dir+"/"+name);
-		$("#uploadform").submit();
-	}
-</script>
 <br>
 <br>
 <div class="container">
-<form id="uploadform" action="/uploadform" method="post" enctype="multipart/form-data">
+<form id="uploadform" action="/uploadform/{{.dir}}" method="post" enctype="multipart/form-data">
 	<h3>File:</h3><input type="file" id="filename" name="filename"><br><br>
-	<input type="submit" onclick="upload_submit({{.dir}})">
+	<input type="submit">
 </form>
 </div>
 {{template "footer.html" .}}

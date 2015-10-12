@@ -28,23 +28,26 @@
       {{range .dirs}}
             <div class="col-sm-3 col-md-2 col-lg-2">
             <div class="thumbnail">
-              <a href="/list/{{.}}">{{.}}</a><br><hr>
-                <label onclick="up({{.}})">UPLOAD</label><hr>
-                <label onclick="dlt({{.}})">DELETE</label>
+              <a href="/list/{{.}}"><img src="http://7xku3c.com1.z0.glb.clouddn.com/dir.png">{{.}}</a><br><hr>
+                <label onclick="up({{.}})">upload</label> &nbsp;&nbsp;
+                <label onclick="dlt({{.}})">delete</label>
             </div>
           </div>
       {{end}}
 	</div>
+  <hr>
     <div class="row">
       {{range .fileviews}}
-            <div class="col-sm-2 col-md-6 col-lg-6">
+            <div class="col-sm-3 col-md-2 col-lg-2">
             <div class="thumbnail">
               <a href="/loadfile/{{.Name}}">{{.Name}}</a>
               	<hr>
-              	<label onclick="down({{.Name}})">DOWNLOAD</label><hr>
-                <label onclick="dlt({{.Name}})">DELETE</label><hr>
-              <textarea cols="60" rows="10">{{.Content}}</textarea>
-            </div>            
+                {{if .Img}}
+                  <img src="{{.Img}}">
+                {{end}}<hr>
+                <label onclick="down({{.Name}})">download</label>&nbsp;&nbsp;
+                <label onclick="dlt({{.Name}})">delete</label><hr>
+            </div>
           </div>
       {{end}}
 	</div>

@@ -3,7 +3,6 @@ package controllers
 import (
 	"fmt"
 	"github.com/shaalx/goutils"
-	// "html/template"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -49,6 +48,22 @@ func (c *MainController) UploadForm() {
 	c.Ctx.WriteString(err.Error())
 }
 
+// @router /uploadform/* [post]
+func (c *MainController) DirUploadForm() {
+	dir := c.Ctx.Input.Param(":splat")
+	_, file, err := c.GetFile("filename")
+	if nil == err {
+		if serr := c.SaveToFile("filename", "./static/"+dir+"/"+file.Filename); serr == nil {
+		} else {
+			beego.Error(serr)
+			c.Ctx.WriteString(serr.Error())
+		}
+		c.Redirect("/list/"+dir, 302)
+	}
+	beego.Error(err)
+	c.Ctx.WriteString(err.Error())
+}
+
 // @router /download/* [get]
 func (c *MainController) Download() {
 	filename := c.Ctx.Input.Param(":splat")
@@ -78,7 +93,12 @@ func (c *MainController) LoadFile() {
 type FileView struct {
 	Name    string
 	Content string
+	Img     string
 }
+
+var (
+	imgs = "png,gif,jpg,jpeg,bmp,tiff"
+)
 
 // @router /list/* [get]
 func (c *MainController) ListFile() {
@@ -100,12 +120,13 @@ func (c *MainController) ListFile() {
 			continue
 		}
 		name := filepath.Join(pathname, it.Name())
-		content := ""
-		if it.Size() < 1e6 && (strings.HasSuffix(name, ".go") || strings.HasSuffix(name, ".java") || strings.HasSuffix(name, ".cpp") || strings.HasSuffix(name, ".md")) {
-			content = readFile(name)
+		fileview := FileView{Name: name}
+		filetypes := strings.Split(name, ".")
+		if len(filetypes) > 1 {
+			if strings.Contains(imgs, filetypes[1]) {
+				fileview.Img = "/loadfile/" + name
+			}
 		}
-
-		fileview := FileView{Name: name, Content: content}
 		fileviews = append(fileviews, fileview)
 	}
 	c.Data["dirs"] = dirs
