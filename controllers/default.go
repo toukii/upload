@@ -243,7 +243,7 @@ func createFile(filename, content string) error {
 	dir := filepath.Dir(filename)
 	_, err := os.Stat("./static/" + dir)
 	if !checkerr(err) {
-		os.Remove("./static/" + dir)
+		os.Remove("./static/" + filename)
 	}
 	os.MkdirAll("./static/"+dir, 0777)
 	file, err := os.OpenFile("./static/"+filename, os.O_CREATE|os.O_WRONLY, 0644)
