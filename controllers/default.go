@@ -107,7 +107,7 @@ func (c *MainController) Display() {
 	filetypes := strings.Split(filename, ".")
 	imged := false
 	if len(filetypes) > 1 {
-		if strings.Contains(".pdf", filetypes[1]) {
+		if strings.Contains(".pdf.doc.docx", filetypes[1]) {
 			c.Redirect("/loadfile/"+filename, 302)
 		}
 		if strings.Contains(imgs, filetypes[1]) {
