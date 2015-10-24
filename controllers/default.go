@@ -13,7 +13,7 @@ import (
 
 var(
 	volumn = "/usr/static/"
-	 // volumn = "./static/"
+	// volumn = "./static/"
 )
 
 type MainController struct {
