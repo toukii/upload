@@ -11,6 +11,11 @@ import (
 	"github.com/astaxie/beego"
 )
 
+var(
+	volumn = "/usr/static/"
+	// volumn = "./static/"
+)
+
 type MainController struct {
 	beego.Controller
 }
@@ -41,7 +46,7 @@ func (c *MainController) LoadUploads() {
 func (c *MainController) UploadForm() {
 	_, file, err := c.GetFile("filename")
 	if nil == err {
-		if serr := c.SaveToFile("filename", "/usr/static/"+file.Filename); serr == nil {
+		if serr := c.SaveToFile("filename", volumn+file.Filename); serr == nil {
 		} else {
 			beego.Error(serr)
 			c.Ctx.WriteString(serr.Error())
@@ -57,7 +62,7 @@ func (c *MainController) DirUploadForm() {
 	dir := c.Ctx.Input.Param(":splat")
 	_, file, err := c.GetFile("filename")
 	if nil == err {
-		if serr := c.SaveToFile("filename", "/usr/static/"+dir+"/"+file.Filename); serr == nil {
+		if serr := c.SaveToFile("filename", volumn+dir+"/"+file.Filename); serr == nil {
 		} else {
 			beego.Error(serr)
 			c.Ctx.WriteString(serr.Error())
@@ -72,7 +77,7 @@ func (c *MainController) DirUploadForm() {
 func (c *MainController) Download() {
 	filename := c.Ctx.Input.Param(":splat")
 	beego.Debug(filename)
-	dstfilename := "/usr/static/" + filename
+	dstfilename := volumn + filename
 	c.Ctx.Output.Download(dstfilename, filename)
 }
 
@@ -80,7 +85,7 @@ func (c *MainController) Download() {
 func (c *MainController) LoadFile() {
 	filename := c.Ctx.Input.Param(":splat")
 	beego.Debug(filename)
-	if file, err := os.Open("/usr/static/" + filename); err != nil {
+	if file, err := os.Open(volumn + filename); err != nil {
 		beego.Error(err)
 		c.Ctx.WriteString(err.Error())
 	} else {
@@ -120,7 +125,7 @@ func (c *MainController) Display() {
 		}
 	}
 	if !imged {
-		info, err := os.Stat("/usr/static/" + filename)
+		info, err := os.Stat(volumn + filename)
 		if nil == err && info.Size() < 1e6 {
 			fileview.Content = readFile(filename)
 			if len(fileview.Content) < 1 {
@@ -152,7 +157,7 @@ func (c *MainController) ListFile() {
 	if "_home" == pathname {
 		pathname = ""
 	}
-	fs, err := ioutil.ReadDir("/usr/static/" + pathname)
+	fs, err := ioutil.ReadDir(volumn + pathname)
 	if checkerr(err) {
 		c.Ctx.WriteString(err.Error())
 	}
@@ -187,7 +192,7 @@ func (c *MainController) DeleteFile() {
 	}
 	file := c.Ctx.Input.Param(":splat")
 	beego.Debug(file)
-	err := os.RemoveAll("/usr/static/" + file)
+	err := os.RemoveAll(volumn + file)
 	if checkerr(err) {
 		c.Ctx.WriteString(file)
 		return
@@ -249,12 +254,12 @@ func (c *MainController) PTopic() {
 
 func createFile(filename, content string) error {
 	dir := filepath.Dir(filename)
-	_, err := os.Stat("/usr/static/" + dir)
+	_, err := os.Stat(volumn + dir)
 	if !checkerr(err) {
-		os.Remove("/usr/static/" + filename)
+		os.Remove(volumn + filename)
 	}
-	os.MkdirAll("/usr/static/"+dir, 0777)
-	file, err := os.OpenFile("/usr/static/"+filename, os.O_CREATE|os.O_WRONLY, 0644)
+	os.MkdirAll(volumn+dir, 0777)
+	file, err := os.OpenFile(volumn+filename, os.O_CREATE|os.O_WRONLY, 0644)
 	defer file.Close()
 	if checkerr(err) {
 		return err
@@ -264,7 +269,7 @@ func createFile(filename, content string) error {
 }
 
 func readFile(filename string) string {
-	file, err := os.Open("/usr/static/" + filename)
+	file, err := os.Open(volumn + filename)
 	defer file.Close()
 	if err != nil {
 		return err.Error()
