@@ -13,7 +13,7 @@ import (
 
 var(
 	volumn = "/usr/static/"
-	// volumn = "./static/"
+	 // volumn = "./static/"
 )
 
 type MainController struct {
@@ -186,6 +186,7 @@ func (c *MainController) ListFile() {
 
 // @router /delfile/* [*]
 func (c *MainController) DeleteFile() {
+	beego.Info(c.Ctx.Request.RemoteAddr)
 	now:=goutils.LocNow("Asia/Shanghai")
 	if now.Second()>10{
 		return
