@@ -116,10 +116,10 @@ func (c *MainController) Display() {
 	filetypes := strings.Split(filename, ".")
 	imged := false
 	if len(filetypes) > 1 {
-		if strings.Contains(".pdf.doc.docx", filetypes[1]) {
+		if strings.Contains(".pdf.doc.docx", filetypes[len(filetypes)-1]) {
 			c.Redirect("/loadfile/"+filename, 302)
 		}
-		if strings.Contains(imgs, filetypes[1]) {
+		if strings.Contains(imgs, filetypes[len(filetypes)-1]) {
 			fileview.Img = "/loadfile/" + filename
 			imged = true
 		}
@@ -172,7 +172,7 @@ func (c *MainController) ListFile() {
 		fileview := FileView{Name: name}
 		filetypes := strings.Split(name, ".")
 		if len(filetypes) > 1 {
-			if strings.Contains(imgs, filetypes[1]) {
+			if strings.Contains(imgs, filetypes[len(filetypes)-1]) {
 				fileview.Img = "/loadfile/" + name
 			}
 		}
