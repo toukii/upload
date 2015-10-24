@@ -17,7 +17,11 @@ type MainController struct {
 
 // @router / [get]
 func (c *MainController) Home() {
-	// c.TplNames = "upload.html"
+	c.Redirect("/list/_home", 302)
+}
+
+// @router /list/ [get]
+func (c *MainController) LHome() {
 	c.Redirect("/list/_home", 302)
 }
 

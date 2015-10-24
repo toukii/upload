@@ -15,6 +15,13 @@ func init() {
 
 	beego.GlobalControllerRouter["github.com/shaalx/upload/controllers:MainController"] = append(beego.GlobalControllerRouter["github.com/shaalx/upload/controllers:MainController"],
 		beego.ControllerComments{
+			"LHome",
+			`/list/`,
+			[]string{"get"},
+			nil})
+
+	beego.GlobalControllerRouter["github.com/shaalx/upload/controllers:MainController"] = append(beego.GlobalControllerRouter["github.com/shaalx/upload/controllers:MainController"],
+		beego.ControllerComments{
 			"LoadUpload",
 			`/upload`,
 			[]string{"get"},
