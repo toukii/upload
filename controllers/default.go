@@ -187,17 +187,15 @@ func (c *MainController) ListFile() {
 // @router /delfile/* [*]
 func (c *MainController) DeleteFile() {
 	beego.Info(c.Ctx.Request.RemoteAddr)
-	now:=goutils.LocNow("Asia/Shanghai")
-	if now.Second()%10>3{
-		c.Ctx.WriteString("_home")
-		return
-	}
 	file := c.Ctx.Input.Param(":splat")
 	beego.Debug(file)
-	err := os.RemoveAll(volumn + file)
-	if checkerr(err) {
-		c.Ctx.WriteString(file)
-		return
+	now:=goutils.LocNow("Asia/Shanghai")
+	if now.Second()%10<3{
+		err := os.RemoveAll(volumn + file)
+			if checkerr(err) {
+				c.Ctx.WriteString(file)
+				return
+		}
 	}
 	dir := filepath.Dir(file)
 	if len(dir) <= 1 {
