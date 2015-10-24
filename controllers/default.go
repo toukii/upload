@@ -12,8 +12,8 @@ import (
 )
 
 var(
-	volumn = "/usr/static/"
-	 // volumn = "./static/"
+	// volumn = "/usr/static/"
+	 volumn = "./static/"
 )
 
 type MainController struct {
@@ -188,7 +188,8 @@ func (c *MainController) ListFile() {
 func (c *MainController) DeleteFile() {
 	beego.Info(c.Ctx.Request.RemoteAddr)
 	now:=goutils.LocNow("Asia/Shanghai")
-	if now.Second()>10{
+	if now.Second()%10>3{
+		c.Ctx.WriteString("_home")
 		return
 	}
 	file := c.Ctx.Input.Param(":splat")
