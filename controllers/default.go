@@ -11,9 +11,9 @@ import (
 	"github.com/astaxie/beego"
 )
 
-var(
-	volumn = "/usr/static/"
-	// volumn = "./static/"
+var (
+	// volumn = "/usr/static/"
+	volumn = "./static/"
 )
 
 type MainController struct {
@@ -189,12 +189,12 @@ func (c *MainController) DeleteFile() {
 	beego.Info(c.Ctx.Request.RemoteAddr)
 	file := c.Ctx.Input.Param(":splat")
 	beego.Debug(file)
-	now:=goutils.LocNow("Asia/Shanghai")
-	if now.Second()%10<3{
+	now := goutils.LocNow("Asia/Shanghai")
+	if now.Second()%10 < 3 {
 		err := os.RemoveAll(volumn + file)
-			if checkerr(err) {
-				c.Ctx.WriteString(file)
-				return
+		if checkerr(err) {
+			c.Ctx.WriteString(file)
+			return
 		}
 	}
 	dir := filepath.Dir(file)
