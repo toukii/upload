@@ -189,6 +189,8 @@ func (c *MainController) DeleteFile() {
 	beego.Info(c.Ctx.Request.RemoteAddr)
 	file := c.Ctx.Input.Param(":splat")
 	beego.Debug(file)
+	c.Ctx.WriteString(fiel)
+	return
 	now := goutils.LocNow("Asia/Shanghai")
 	if now.Second()%10 < 3 {
 		err := os.RemoveAll(volumn + file)
