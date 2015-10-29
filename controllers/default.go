@@ -2,18 +2,19 @@ package controllers
 
 import (
 	"fmt"
+	"github.com/astaxie/beego"
 	"github.com/shaalx/goutils"
+	"html/template"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/astaxie/beego"
 )
 
 var (
-	// volumn = "/usr/static/"
-	volumn = "./static/"
+	volumn = "/usr/static/"
+	// volumn = "./static/"
 )
 
 type MainController struct {
@@ -134,15 +135,46 @@ func (c *MainController) Display() {
 		}
 
 	}
+	line := readLine(volumn + filename)
+	if strings.Contains(line, "http://") || strings.Contains(line, "https://") {
+		fileview.URI = template.HTML(goutils.ToString(LoadURL(line)))
+	}
 	c.Data["dir"] = filepath.Dir(filename)
 	c.Data["file"] = fileview
 	c.TplNames = "display.html"
+}
+
+func readLine(filename string) string {
+	file, err := os.Open(filename)
+	defer file.Close()
+	if checkerr(err) {
+		return ""
+	}
+	b := make([]byte, 300)
+	n, err := file.Read(b)
+	if checkerr(err) {
+		return ""
+	}
+	return goutils.ToString(b[:n])
+}
+
+func LoadURL(uri string) []byte {
+	resp, err := http.Get(uri)
+	if checkerr(err) {
+		return nil
+	}
+	b, err := ioutil.ReadAll(resp.Body)
+	if checkerr(err) {
+		return nil
+	}
+	return b
 }
 
 type FileView struct {
 	Name    string
 	Content string
 	Img     string
+	URI     interface{}
 }
 
 var (
@@ -189,7 +221,6 @@ func (c *MainController) DeleteFile() {
 	beego.Info(c.Ctx.Request.RemoteAddr)
 	file := c.Ctx.Input.Param(":splat")
 	beego.Debug(file)
-	c.Ctx.WriteString(fiel)
 	return
 	now := goutils.LocNow("Asia/Shanghai")
 	if now.Second()%10 < 3 {
