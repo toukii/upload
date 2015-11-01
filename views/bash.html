@@ -1,0 +1,27 @@
+{{template "header.html" .}}
+<br>
+<br>
+<div class="container">
+	<h4><font color="white">BASH</font></h4>
+	<form id="bashform" method="post" action="/bash">
+		<input name="shcont" type="text">
+		<input type="submit">
+	</form>
+	<div>
+		<p>
+			
+			<ul>
+				{{range .result}}
+					<li>
+						<h4><font color="green">{{.}}</font></h4>
+					</li>
+				{{end}}
+			</ul>
+		</p>
+		<br>
+		<p>
+			<h5><font color="red">{{.err}}</font></h5>
+		</p>
+	</div>
+</div>
+{{template "footer.html" .}}

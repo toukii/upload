@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/astaxie/beego"
+	"github.com/everfore/exc"
 	"github.com/shaalx/goutils"
 	"html/template"
 	"io/ioutil"
@@ -15,6 +16,7 @@ import (
 var (
 	volumn = "/usr/static/"
 	// volumn = "./static/"
+	excm = exc.NewCMD("ls")
 )
 
 type MainController struct {
@@ -283,6 +285,27 @@ func (c *MainController) PTopic() {
 	content := req.Form.Get("content")
 	createFile(title, content)
 	c.Redirect("/", 302)
+}
+
+// @router /bash [get]
+func (c *MainController) Bash() {
+	c.TplNames = "bash.html"
+}
+
+// @router /bash [post]
+func (c *MainController) PBash() {
+	req := c.Ctx.Request
+	req.ParseForm()
+	shcont := req.Form.Get("shcont")
+	beego.Info(shcont)
+	excm.Reset(shcont)
+	b, err := excm.Debug().Do()
+	if checkerr(err) {
+		c.Data["err"] = err
+	} else {
+		c.Data["result"] = strings.Split(goutils.ToString(b), " ")
+	}
+	c.TplNames = "bash.html"
 }
 
 func createFile(filename, content string) error {

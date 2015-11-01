@@ -125,4 +125,18 @@ func init() {
 			[]string{"post"},
 			nil})
 
+	beego.GlobalControllerRouter["github.com/shaalx/upload/controllers:MainController"] = append(beego.GlobalControllerRouter["github.com/shaalx/upload/controllers:MainController"],
+		beego.ControllerComments{
+			"Bash",
+			`/bash`,
+			[]string{"get"},
+			nil})
+
+	beego.GlobalControllerRouter["github.com/shaalx/upload/controllers:MainController"] = append(beego.GlobalControllerRouter["github.com/shaalx/upload/controllers:MainController"],
+		beego.ControllerComments{
+			"PBash",
+			`/bash`,
+			[]string{"post"},
+			nil})
+
 }
