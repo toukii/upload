@@ -14,9 +14,9 @@ import (
 )
 
 var (
-	// volumn = "/usr/static/"
-	volumn = "./static/"
-	excm   = exc.NewCMD("ls")
+	volumn = "/usr/static/"
+	// volumn = "./static/"
+	excm = exc.NewCMD("ls")
 )
 
 type MainController struct {
