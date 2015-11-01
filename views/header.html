@@ -18,15 +18,30 @@
 	<title>UPload</title>
 </head>
 <body>
-	<div class="navbar navbar-inverse navbar-fixed-top">
+	<!-- <div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
 			<a class="navbar-brand hidden-sm" href="/list/_home">Home</a>
 			<a class="navbar-brand hidden-sm" href="/list/{{.dir}}"><h4>list</h4></a>
 			<a class="navbar-brand hidden-sm" href="/topic/{{.dir}}"><h4>topic</h4></a>
 			<a class="navbar-brand hidden-sm" href="/upload/{{.dir}}"><h4>upload</h4></a>
-			<!-- <a class="navbar-brand hidden-sm" href="/previous/{{.dir}}">previous</a> -->
 			<ul class="nav navbar-nav navbar-right hidden-sm">
 				<li><a class="navbar-brand hidden-sm" href="/bash">>_</a></li>
-          </ul>
+			</ul>
 		</div>
+	</div> -->
+	<div class="container">
+		<nav class="navbar navbar-default" role="navigation" id="navbar">
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				<ul class="nav navbar-nav" id="menu">
+					<li><a href="/list/_home">HOME</a></li>
+					<li><a href="/list/{{.dir}}">list</a></li>
+					<li><a href="/topic/{{.dir}}">topic</a></li>
+					<li><a href="/upload/{{.dir}}">upload</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right hidden-sm">
+					<li><a class="navbar-brand hidden-sm" href="/bash">$_<</a></li>
+				</ul>
+			</div>
+		</nav>
 	</div>
+	
