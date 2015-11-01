@@ -1,27 +1,42 @@
 {{template "header.html" .}}
 <br>
 <br>
+<script type="text/javascript">
+	$(document).ready(function(){
+	  	$("#shcont").keydown(function(argument) {
+			// bash();
+		});
+		$("#shcont").keypress( function(event){
+			if ("13"==event.which) {
+				bash();
+				$(this).val("")
+			};
+		});
+	});
+	function bash () {
+		$.ajax({
+		 url: '/bash',
+		 type: 'POST',
+		 data:{"shcont":$("#shcont").val()},
+		 success: function(result) {
+		  	$("#result").text(result);
+		 }
+		});
+	}
+</script>
+<style type="text/css">
+	.hecker{
+		color: #00FF00;
+		background-color:#000;
+		font-size:14px;
+	}
+</style>
 <div class="container">
-	<h4><font color="white">BASH</font></h4>
-	<form id="bashform" method="post" action="/bash">
-		<input name="shcont" type="text">
-		<input type="submit">
-	</form>
+	<!-- <h4><font color="white">BASH</font></h4> -->
 	<div>
-		<p>
-			
-			<ul>
-				{{range .result}}
-					<li>
-						<h4><font color="green">{{.}}</font></h4>
-					</li>
-				{{end}}
-			</ul>
-		</p>
-		<br>
-		<p>
-			<h5><font color="red">{{.err}}</font></h5>
-		</p>
+		<textarea id="result" class="form-control hecker" style="color:#00FF00;background-color:#000;" readonly="true" cols="50" rows="18">			
+		</textarea>
+		<input id="shcont" class="form-control hecker" name="shcont" width="10" type="text">
 	</div>
 </div>
 {{template "footer.html" .}}

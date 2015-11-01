@@ -14,9 +14,9 @@ import (
 )
 
 var (
-	volumn = "/usr/static/"
-	// volumn = "./static/"
-	excm = exc.NewCMD("ls")
+	// volumn = "/usr/static/"
+	volumn = "./static/"
+	excm   = exc.NewCMD("ls")
 )
 
 type MainController struct {
@@ -297,15 +297,21 @@ func (c *MainController) PBash() {
 	req := c.Ctx.Request
 	req.ParseForm()
 	shcont := req.Form.Get("shcont")
+	// fmt.Println(c.Ctx.Input.Request)
+	// fmt.Println(c.Ctx.Input.Data)
+	// shcont := c.Ctx.Input.Param("shcont")
 	beego.Info(shcont)
 	excm.Reset(shcont)
 	b, err := excm.Debug().Do()
 	if checkerr(err) {
-		c.Data["err"] = err
+		// c.Data["err"] = err.Error()
+		b = goutils.ToByte(err.Error())
 	} else {
-		c.Data["result"] = strings.Split(goutils.ToString(b), " ")
+		// c.Data["result"] = strings.Split(goutils.ToString(b), " ")
 	}
-	c.TplNames = "bash.html"
+	c.Ctx.ResponseWriter.Write(b)
+	// return fmt.Sprintf("%v", ret)
+	// c.TplNames = "bash.html"
 }
 
 func createFile(filename, content string) error {
