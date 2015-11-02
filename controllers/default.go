@@ -305,7 +305,7 @@ func (c *MainController) PBash() {
 	b, err := excm.Debug().Do()
 	if checkerr(err) {
 		// c.Data["err"] = err.Error()
-		b = goutils.ToByte(err.Error())
+		b = append(b, goutils.ToByte(err.Error())...)
 	} else {
 		// c.Data["result"] = strings.Split(goutils.ToString(b), " ")
 	}
