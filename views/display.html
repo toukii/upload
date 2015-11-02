@@ -2,7 +2,8 @@
 <div class="container">
 	<h4><font color="white">{{.file.Name}}</font></h4>
 	{{if .file.URI}}
-			{{.file.URI}}
+			<!-- {{.file.URI}} -->
+			<a href="{{.file.Content}}"><h4>{{.file.Content}}</h4></a>
 	{{else if .file.Content}}
 		<form id="publishform" method="post">
 			<textarea name="content" rows="22" cols="99">{{.file.Content}}</textarea><br>
