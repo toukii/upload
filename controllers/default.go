@@ -5,7 +5,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/everfore/exc"
 	"github.com/shaalx/goutils"
-	"html/template"
+	// "html/template"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -139,7 +139,8 @@ func (c *MainController) Display() {
 	}
 	line := readLine(volumn + filename)
 	if strings.Contains(line, "http://") || strings.Contains(line, "https://") {
-		fileview.URI = template.HTML(goutils.ToString(LoadURL(line)))
+		// fileview.URI = template.HTML(goutils.ToString(LoadURL(line)))
+		fileview.URI = line
 	}
 	c.Data["dir"] = filepath.Dir(filename)
 	c.Data["file"] = fileview
