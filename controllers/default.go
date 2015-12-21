@@ -138,7 +138,7 @@ func (c *MainController) Display() {
 
 	}
 	line := readLine(volumn + filename)
-	if strings.Contains(line, "http://") || strings.Contains(line, "https://") {
+	if strings.Count(line, "http://") == 1 || strings.Contains(line, "https://") ==1 {
 		// fileview.URI = template.HTML(goutils.ToString(LoadURL(line)))
 		fileview.URI = line
 	}
