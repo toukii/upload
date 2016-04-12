@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	volumn = "/usr/static/upload"
+	volumn = "/usr/static/upload/"
 	// volumn = "./static/"
 	excm = exc.NewCMD("ls")
 )
