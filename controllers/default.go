@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	volumn = "/usr/static/"
+	volumn = "/usr/static/upload"
 	// volumn = "./static/"
 	excm = exc.NewCMD("ls")
 )
@@ -35,14 +35,14 @@ func (c *MainController) LHome() {
 
 // @router /upload [get]
 func (c *MainController) LoadUpload() {
-	c.TplNames = "upload.html"
+	c.TplName = "upload.html"
 }
 
 // @router /upload/* [get]
 func (c *MainController) LoadUploads() {
 	dir := c.Ctx.Input.Param(":splat")
 	c.Data["dir"] = dir
-	c.TplNames = "upload.html"
+	c.TplName = "upload.html"
 }
 
 // @router /uploadform [post]
@@ -138,13 +138,13 @@ func (c *MainController) Display() {
 
 	}
 	line := readLine(volumn + filename)
-	if strings.Count(line, "http://") == 1 || strings.Count(line, "https://") ==1 {
+	if strings.Count(line, "http://") == 1 || strings.Count(line, "https://") == 1 {
 		// fileview.URI = template.HTML(goutils.ToString(LoadURL(line)))
 		fileview.URI = line
 	}
 	c.Data["dir"] = filepath.Dir(filename)
 	c.Data["file"] = fileview
-	c.TplNames = "display.html"
+	c.TplName = "display.html"
 }
 
 func readLine(filename string) string {
@@ -216,7 +216,7 @@ func (c *MainController) ListFile() {
 	c.Data["dir"] = pathname
 	c.Data["dirs"] = dirs
 	c.Data["fileviews"] = fileviews
-	c.TplNames = "list.html"
+	c.TplName = "list.html"
 }
 
 // @router /delfile/* [*]
@@ -224,18 +224,24 @@ func (c *MainController) DeleteFile() {
 	beego.Info(c.Ctx.Request.RemoteAddr)
 	file := c.Ctx.Input.Param(":splat")
 	beego.Debug(file)
-	return
-	now := goutils.LocNow("Asia/Shanghai")
-	if now.Second()%10 < 3 {
-		err := os.RemoveAll(volumn + file)
-		if checkerr(err) {
-			c.Ctx.WriteString(file)
-			return
-		}
+	inputName := c.GetString("Name")
+	fmt.Println(file, inputName, file == inputName)
+	if file != inputName {
+		c.Ctx.WriteString("_home")
+		return
 	}
+	/*now := goutils.LocNow("Asia/Shanghai")
+	if now.Second()%10 < 3 {}
+	*/
+	err := os.RemoveAll(volumn + file)
+	if checkerr(err) {
+		c.Ctx.WriteString(file)
+		return
+	}
+
 	dir := filepath.Dir(file)
-	if len(dir) <= 1 {
-		dir = "_home"
+	if "." == dir {
+		dir = "/"
 	}
 	c.Ctx.WriteString(dir)
 }
@@ -257,13 +263,13 @@ func (c *MainController) Upload() {
 
 // @router /topic [get]
 func (c *MainController) GTopic() {
-	c.TplNames = "topic.html"
+	c.TplName = "topic.html"
 }
 
 // @router /topic/* [get]
 func (c *MainController) GTopics() {
 	c.Data["dir"] = c.Ctx.Input.Param(":splat")
-	c.TplNames = "topic.html"
+	c.TplName = "topic.html"
 }
 
 // @router /topic/* [post]
@@ -290,7 +296,7 @@ func (c *MainController) PTopic() {
 
 // @router /bash [get]
 func (c *MainController) Bash() {
-	c.TplNames = "bash.html"
+	c.TplName = "bash.html"
 }
 
 // @router /bash [post]
@@ -312,7 +318,7 @@ func (c *MainController) PBash() {
 	}
 	c.Ctx.ResponseWriter.Write(b)
 	// return fmt.Sprintf("%v", ret)
-	// c.TplNames = "bash.html"
+	// c.TplName = "bash.html"
 }
 
 func createFile(filename, content string) error {

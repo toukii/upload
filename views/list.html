@@ -3,7 +3,9 @@
 	function dlt (file) {
 		$.ajax({
 		 url: '/delfile/'+file,
-		 type: 'DELETE',
+		 type: 'POST',
+     dataType:"json",
+     data:{"Name":$("#"+file).val()},
 		 success: function(result) {
 		  // Do something with the result
 		  // alert(result);
@@ -46,6 +48,7 @@
                 {{end}}
                 {{.Name}}</a>
                 <hr>
+                <input type="text" id="{{.Name}}" /><br>
                 <label onclick="down({{.Name}})">download</label>&nbsp;&nbsp;
                 <label onclick="dlt({{.Name}})">delete</label><hr>
             </div>
