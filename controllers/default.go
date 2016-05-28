@@ -15,9 +15,9 @@ import (
 )
 
 var (
-	// volumn = "/usr/static/upload/"
-	volumn = "./static/"
-	excm   = exc.NewCMD("ls")
+	volumn = "/usr/static/upload/"
+	// volumn = "./static/"
+	excm = exc.NewCMD("ls")
 )
 
 type MainController struct {
