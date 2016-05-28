@@ -1,7 +1,6 @@
 {{template "header.html" .}}
 <script type="text/javascript">
 	function dlt (file) {
-    alert(file);
 		$.ajax({
 		 url: '/delfile/'+file,
 		 type: 'POST',
