@@ -10,12 +10,13 @@ import (
 
 func TestT(t *testing.T) {
 
-	b, err := ioutil.ReadFile("Third.java")
+	// b, err := ioutil.ReadFile("Third.java")
+	b, err := httplib.Get("http://bookmark.daoapp.io").Bytes()
 	if checkerr(err) {
 		return
 	}
-	req := httplib.Put("http://localhost:8080/upload/tests/upload_test.go")
-	// req := httplib.Put("http://upload.daoapp.io/upload/第一题/First.java")
+	// req := httplib.Put("http://localhost:8080/upload/tests/upload_test.go")
+	req := httplib.Put("http://upload.daoapp.io/upload/First.md")
 	// req := httplib.Put("http://upload.daoapp.io/upload/第二题/Second.java")
 	// req := httplib.Put("http://upload.daoapp.io/upload/小易打怪/Third.java")
 	req.Body(b)

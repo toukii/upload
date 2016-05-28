@@ -5,7 +5,7 @@
 		 url: '/delfile/'+file,
 		 type: 'POST',
      dataType:"json",
-     data:{"Name":$("#"+file).val()},
+     data:{"Name":file},
 		 success: function(result) {
 		  // Do something with the result
 		  // alert(result);
@@ -40,7 +40,7 @@
       {{range .fileviews}}
             <div class="col-sm-3 col-md-2 col-lg-3">
             <div class="thumbnail">
-              <a href="/display/{{.Name}}" target="_blank">
+              <a href="/display/{{.Name}}" target="">
                 {{if .Img}}
                   <img src="{{.Img}}">
                 {{else}}
@@ -48,7 +48,6 @@
                 {{end}}
                 {{.Name}}</a>
                 <hr>
-                <input type="text" id="{{.Name}}" /><br>
                 <label onclick="down({{.Name}})">download</label>&nbsp;&nbsp;
                 <label onclick="dlt({{.Name}})">delete</label><hr>
             </div>

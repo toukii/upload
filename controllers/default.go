@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 )
@@ -116,16 +117,14 @@ func (c *MainController) PostDisplay() {
 func (c *MainController) Display() {
 	filename := c.Ctx.Input.Param(":splat")
 	fileview := FileView{Name: filename}
-	filetypes := strings.Split(filename, ".")
+	filetype := path.Ext(filename)
 	imged := false
-	if len(filetypes) > 1 {
-		if strings.Contains(".pdf.doc.docx", filetypes[len(filetypes)-1]) {
-			c.Redirect("/loadfile/"+filename, 302)
-		}
-		if strings.Contains(imgs, filetypes[len(filetypes)-1]) {
-			fileview.Img = "/loadfile/" + filename
-			imged = true
-		}
+	if strings.Contains(docs, filetype) {
+		c.Redirect("/loadfile/"+filename, 302)
+	}
+	if strings.Contains(imgs, filetype) {
+		fileview.Img = "/loadfile/" + filename
+		imged = true
 	}
 	if !imged {
 		info, err := os.Stat(volumn + filename)
@@ -138,10 +137,11 @@ func (c *MainController) Display() {
 
 	}
 	line := readLine(volumn + filename)
-	if strings.Count(line, "http://") == 1 || strings.Count(line, "https://") == 1 {
+	/*if strings.Count(line, "http://") == 1 || strings.Count(line, "https://") == 1 {
 		// fileview.URI = template.HTML(goutils.ToString(LoadURL(line)))
 		fileview.URI = line
-	}
+	}*/
+	fileview.Content = line
 	c.Data["dir"] = filepath.Dir(filename)
 	c.Data["file"] = fileview
 	c.TplName = "display.html"
@@ -181,7 +181,8 @@ type FileView struct {
 }
 
 var (
-	imgs = "png,gif,jpg,jpeg,bmp,tiff"
+	imgs = ".png.gif.jpg.jpeg.bmp.tiff"
+	docs = ".pdf.doc.docx.html"
 )
 
 // @router /list/* [get]
@@ -205,11 +206,9 @@ func (c *MainController) ListFile() {
 		}
 		name := filepath.Join(pathname, it.Name())
 		fileview := FileView{Name: name}
-		filetypes := strings.Split(name, ".")
-		if len(filetypes) > 1 {
-			if strings.Contains(imgs, filetypes[len(filetypes)-1]) {
-				fileview.Img = "/loadfile/" + name
-			}
+		filetype := path.Ext(name)
+		if strings.Contains(imgs, filetype) {
+			fileview.Img = "/loadfile/" + name
 		}
 		fileviews = append(fileviews, fileview)
 	}
@@ -223,13 +222,16 @@ func (c *MainController) ListFile() {
 func (c *MainController) DeleteFile() {
 	beego.Info(c.Ctx.Request.RemoteAddr)
 	file := c.Ctx.Input.Param(":splat")
-	beego.Debug(file)
-	inputName := c.GetString("Name")
+	beego.Debug(file, path.Ext(file))
+	if strings.Contains(imgs, path.Ext(file)) {
+		return
+	}
+	/*inputName := c.GetString("Name")
 	fmt.Println(file, inputName, file == inputName)
 	if file != inputName {
 		c.Ctx.WriteString("_home")
 		return
-	}
+	}*/
 	/*now := goutils.LocNow("Asia/Shanghai")
 	if now.Second()%10 < 3 {}
 	*/
