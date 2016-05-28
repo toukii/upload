@@ -223,7 +223,8 @@ func (c *MainController) DeleteFile() {
 	beego.Info(c.Ctx.Request.RemoteAddr)
 	file := c.Ctx.Input.Param(":splat")
 	beego.Debug(file, path.Ext(file))
-	if strings.Contains(imgs, path.Ext(file)) {
+	ext := path.Ext(file)
+	if len(ext) > 0 && strings.Contains(imgs, path.Ext(file)) {
 		return
 	}
 	/*inputName := c.GetString("Name")
