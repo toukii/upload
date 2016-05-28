@@ -15,9 +15,9 @@ import (
 )
 
 var (
-	volumn = "/usr/static/upload/"
-	// volumn = "./static/"
-	excm = exc.NewCMD("ls")
+	// volumn = "/usr/static/upload/"
+	volumn = "./static/"
+	excm   = exc.NewCMD("ls")
 )
 
 type MainController struct {
@@ -245,6 +245,7 @@ func (c *MainController) DeleteFile() {
 	if "." == dir {
 		dir = "/"
 	}
+	fmt.Println(dir)
 	c.Ctx.WriteString(dir)
 }
 

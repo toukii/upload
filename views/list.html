@@ -1,6 +1,7 @@
 {{template "header.html" .}}
 <script type="text/javascript">
 	function dlt (file) {
+    alert(file);
 		$.ajax({
 		 url: '/delfile/'+file,
 		 type: 'POST',
@@ -8,10 +9,13 @@
      data:{"Name":file},
 		 success: function(result) {
 		  // Do something with the result
-		  // alert(result);
-		  window.location.href = "/list/"+result;
+      alert("result"+result);
+      window.location.reload();
+		  // window.location.href = "/list/"+result;
+
 		 }
 		});
+    window.location.reload();
 	}
 
   function down (file) {
