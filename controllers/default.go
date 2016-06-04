@@ -7,6 +7,7 @@ import (
 	"github.com/shaalx/goutils"
 	// "html/template"
 	"github.com/everfore/rpcsv"
+	"github.com/satori/go.uuid"
 	"io/ioutil"
 	"net/http"
 	"net/rpc"
@@ -23,7 +24,8 @@ var (
 
 	RPC_Client *rpc.Client
 	// rpc_tcp_server = "127.0.0.1:8800"
-	rpc_tcp_server = "upload.t0.daoapp.io:61441"
+	// os.Getenv("RPCHUB")
+	rpc_tcp_server = "rpchub.t0.daoapp.io:61142"
 )
 
 func connect() *rpc.Client {
@@ -275,10 +277,14 @@ func (c *MainController) Upload() {
 	createFile(filename, goutils.ToString(b))
 }
 
+func UUID() string {
+	return uuid.NewV4().String()
+}
+
 // @router /job [get]
 func (c *MainController) GJob() {
 	fmt.Println(c.Ctx.Request.RequestURI)
-	c.Data["name"] = c.Ctx.Request.Host
+	c.Data["name"] = UUID()
 	c.TplName = "job.html"
 }
 
@@ -286,7 +292,7 @@ func (c *MainController) GJob() {
 func (c *MainController) GJobs() {
 	c.Data["dir"] = c.Ctx.Input.Param(":splat")
 	fmt.Println(c.Ctx.Request.RequestURI)
-	c.Data["name"] = c.Ctx.Request.Host
+	c.Data["name"] = UUID()
 	c.TplName = "job.html"
 }
 
