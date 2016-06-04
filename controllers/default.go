@@ -283,29 +283,19 @@ func UUID() string {
 
 // @router /job [get]
 func (c *MainController) GJob() {
-	fmt.Println(c.Ctx.Request.RequestURI)
-	c.Data["name"] = UUID()
+	uuid := UUID()
+	c.Data["name"] = uuid
+	c.Data["wall"] = rpcsv.Job{Name: uuid}
 	c.TplName = "job.html"
 }
 
 // @router /job/* [get]
 func (c *MainController) GJobs() {
 	c.Data["dir"] = c.Ctx.Input.Param(":splat")
-	fmt.Println(c.Ctx.Request.RequestURI)
-	c.Data["name"] = UUID()
+	uuid := UUID()
+	c.Data["name"] = uuid
+	c.Data["wall"] = rpcsv.Job{Name: uuid}
 	c.TplName = "job.html"
-}
-
-// @router /job/* [post]
-func (c *MainController) PJobs() string {
-	// dir := c.Ctx.Input.Param(":splat")
-	req := c.Ctx.Request
-	req.ParseForm()
-	title := req.Form.Get("name")
-	content := req.Form.Get("target")
-	fmt.Println(title, content)
-	c.Data["result"] = fmt.Sprintf("%s,%s", title, content)
-	return fmt.Sprintf("%s,%s", title, content)
 }
 
 // @router /job [post]
@@ -318,12 +308,14 @@ func (c *MainController) PJob() {
 	job := rpcsv.Job{Name: title, Target: content}
 	RPC_Client = connect()
 	b := make([]byte, 10)
-	err := RPC_Client.Call("RPC.Job", &job, &b)
+	err := RPC_Client.Call("RPC.AJob", &job, &b)
 	if goutils.CheckErr(err) {
 		c.Data["json"] = err
 	} else {
 		// fmt.Println(goutils.ToString(b))
-		c.Data["json"] = goutils.ToString(b)
+		job.Result = b
+		job.Target = fmt.Sprintf(`<a href="http://upload.daoapp.io/loadfile/%s.html" target="blank">%s</a><br>`, job.Name, job.Target)
+		c.Data["json"] = job //goutils.ToString(b)
 	}
 	c.ServeJSON(true)
 }
