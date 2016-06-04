@@ -29,7 +29,16 @@ var (
 )
 
 func connect() *rpc.Client {
-	return rpcsv.RPCClientWithCodec(rpc_tcp_server)
+	return rpcsv.RPCClient(rpc_tcp_server)
+}
+
+// 是否重新开始循环
+func checkNilThenReLoop(clt *rpc.Client, reconnect bool) (bool, *rpc.Client) {
+	if clt == nil || reconnect {
+		clt = rpcsv.RPCClient(rpc_tcp_server)
+		return true, clt
+	}
+	return false, clt
 }
 
 type MainController struct {
@@ -306,11 +315,12 @@ func (c *MainController) PJob() {
 	content := req.Form.Get("target")
 	fmt.Printf("%s,%s", title, content)
 	job := rpcsv.Job{Name: title, Target: content}
-	RPC_Client = connect()
 	b := make([]byte, 10)
+	_, RPC_Client = checkNilThenReLoop(RPC_Client, false)
 	err := RPC_Client.Call("RPC.AJob", &job, &b)
 	if goutils.CheckErr(err) {
 		c.Data["json"] = err
+		_, RPC_Client = checkNilThenReLoop(RPC_Client, true)
 	} else {
 		// fmt.Println(goutils.ToString(b))
 		job.Result = b
