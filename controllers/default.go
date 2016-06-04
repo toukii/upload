@@ -17,11 +17,12 @@ import (
 )
 
 var (
-	// volumn = "/usr/static/upload/"
-	volumn = "./static/"
-	excm   = exc.NewCMD("ls")
+	volumn = "/usr/static/upload/"
+	// volumn = "./static/"
+	excm = exc.NewCMD("ls")
 
-	RPC_Client     *rpc.Client
+	RPC_Client *rpc.Client
+	// rpc_tcp_server = "127.0.0.1:8800"
 	rpc_tcp_server = "tcphub.t0.daoapp.io:61142"
 )
 
@@ -277,7 +278,7 @@ func (c *MainController) Upload() {
 // @router /job [get]
 func (c *MainController) GJob() {
 	fmt.Println(c.Ctx.Request.RequestURI)
-	c.Data["name"] = c.Ctx.Request.RemoteAddr
+	c.Data["name"] = c.Ctx.Request.Host
 	c.TplName = "job.html"
 }
 
@@ -285,7 +286,7 @@ func (c *MainController) GJob() {
 func (c *MainController) GJobs() {
 	c.Data["dir"] = c.Ctx.Input.Param(":splat")
 	fmt.Println(c.Ctx.Request.RequestURI)
-	c.Data["name"] = c.Ctx.Request.RemoteAddr
+	c.Data["name"] = c.Ctx.Request.Host
 	c.TplName = "job.html"
 }
 
