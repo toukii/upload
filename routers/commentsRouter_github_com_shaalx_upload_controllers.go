@@ -94,9 +94,36 @@ func init() {
 		beego.ControllerComments{
 			"Upload",
 			`/upload/*`,
-			[]string{"post","put"},
+			[]string{"post", "put"},
 			nil})
 
+	beego.GlobalControllerRouter["github.com/shaalx/upload/controllers:MainController"] = append(beego.GlobalControllerRouter["github.com/shaalx/upload/controllers:MainController"],
+		beego.ControllerComments{
+			"GJob",
+			`/job`,
+			[]string{"get"},
+			nil})
+
+	beego.GlobalControllerRouter["github.com/shaalx/upload/controllers:MainController"] = append(beego.GlobalControllerRouter["github.com/shaalx/upload/controllers:MainController"],
+		beego.ControllerComments{
+			"GJobs",
+			`/job/*`,
+			[]string{"get"},
+			nil})
+
+	beego.GlobalControllerRouter["github.com/shaalx/upload/controllers:MainController"] = append(beego.GlobalControllerRouter["github.com/shaalx/upload/controllers:MainController"],
+		beego.ControllerComments{
+			"PJobs",
+			`/job/*`,
+			[]string{"post"},
+			nil})
+
+	beego.GlobalControllerRouter["github.com/shaalx/upload/controllers:MainController"] = append(beego.GlobalControllerRouter["github.com/shaalx/upload/controllers:MainController"],
+		beego.ControllerComments{
+			"PJob",
+			`/job`,
+			[]string{"post"},
+			nil})
 	beego.GlobalControllerRouter["github.com/shaalx/upload/controllers:MainController"] = append(beego.GlobalControllerRouter["github.com/shaalx/upload/controllers:MainController"],
 		beego.ControllerComments{
 			"GTopic",

@@ -1,0 +1,42 @@
+<!-- <!DOCTYPE html> -->
+<html>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+	<script type="text/javascript" src="http://7xku3c.com1.z0.glb.clouddn.com/jquery.js"></script>
+	<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+</head>
+<body>
+<div class="row">
+	<div class="col-md-11">
+		<div class="input-group">
+		      <div class="input-group-addon">Target</div>
+		      <input type="text" class="form-control" id="target" name="target"  placeholder="target" onkeypress="press()">
+		      <input type="hidden" name="name" id="name" value="{{.name}}">
+	    </div>
+	</div>
+</div>
+<div id="target_content"></div>
+</body>
+
+<script type="text/javascript">
+	function press() {
+		if ("13"==event.which) {
+			$("#target_content").html("waiting ...");
+			job();
+			$(this).val("")
+		};
+	}
+	function job () {
+		$.ajax({
+		 url: '/job',
+		 type: 'POST',
+		 dataType:'json',
+		 data:{"target":$("#target").val(),"name":$("#name").val(),},
+		 success: function(result) {
+		  	$("#target_content").html(result);
+		  	// $("#target").val("");
+		 }
+		});
+	}
+</script>
+</html>

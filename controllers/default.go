@@ -6,8 +6,10 @@ import (
 	"github.com/everfore/exc"
 	"github.com/shaalx/goutils"
 	// "html/template"
+	"github.com/everfore/rpcsv"
 	"io/ioutil"
 	"net/http"
+	"net/rpc"
 	"os"
 	"path"
 	"path/filepath"
@@ -15,10 +17,17 @@ import (
 )
 
 var (
-	volumn = "/usr/static/upload/"
-	// volumn = "./static/"
-	excm = exc.NewCMD("ls")
+	// volumn = "/usr/static/upload/"
+	volumn = "./static/"
+	excm   = exc.NewCMD("ls")
+
+	RPC_Client     *rpc.Client
+	rpc_tcp_server = "tcphub.t0.daoapp.io:61142"
 )
+
+func connect() *rpc.Client {
+	return rpcsv.RPCClientWithCodec(rpc_tcp_server)
+}
 
 type MainController struct {
 	beego.Controller
@@ -263,6 +272,53 @@ func (c *MainController) Upload() {
 	}
 	filename := c.Ctx.Input.Param(":splat")
 	createFile(filename, goutils.ToString(b))
+}
+
+// @router /job [get]
+func (c *MainController) GJob() {
+	fmt.Println(c.Ctx.Request.RequestURI)
+	c.Data["name"] = c.Ctx.Request.RemoteAddr
+	c.TplName = "job.html"
+}
+
+// @router /job/* [get]
+func (c *MainController) GJobs() {
+	c.Data["dir"] = c.Ctx.Input.Param(":splat")
+	fmt.Println(c.Ctx.Request.RequestURI)
+	c.Data["name"] = c.Ctx.Request.RemoteAddr
+	c.TplName = "job.html"
+}
+
+// @router /job/* [post]
+func (c *MainController) PJobs() string {
+	// dir := c.Ctx.Input.Param(":splat")
+	req := c.Ctx.Request
+	req.ParseForm()
+	title := req.Form.Get("name")
+	content := req.Form.Get("target")
+	fmt.Println(title, content)
+	c.Data["result"] = fmt.Sprintf("%s,%s", title, content)
+	return fmt.Sprintf("%s,%s", title, content)
+}
+
+// @router /job [post]
+func (c *MainController) PJob() {
+	req := c.Ctx.Request
+	req.ParseForm()
+	title := req.Form.Get("name")
+	content := req.Form.Get("target")
+	fmt.Printf("%s,%s", title, content)
+	job := rpcsv.Job{Name: title, Target: content}
+	RPC_Client = connect()
+	b := make([]byte, 10)
+	err := RPC_Client.Call("RPC.Job", &job, &b)
+	if goutils.CheckErr(err) {
+		c.Data["json"] = err
+	} else {
+		// fmt.Println(goutils.ToString(b))
+		c.Data["json"] = goutils.ToString(b)
+	}
+	c.ServeJSON(true)
 }
 
 // @router /topic [get]
