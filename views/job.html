@@ -34,7 +34,7 @@
 		 data:{"target":$("#target").val(),"name":$("#name").val(),},
 		 success: function(result) {
 		  	// $("#target_content").html(result.Target);
-		  	$("#target_content").append(result.Target);
+		  	$("#target_content").html(result.Target);
 		  	$("#target_content").append(result.TargetContent);
 		  	// $("#target").val("");
 		 }
