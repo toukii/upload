@@ -18,7 +18,8 @@ import (
 )
 
 var (
-	volumn = "/usr/static/upload/"
+	forbidden_dir = ".forbidden"
+	volumn        = "/usr/static/upload/"
 	// volumn = "./static/"
 	excm = exc.NewCMD("ls")
 
@@ -211,6 +212,15 @@ func (c *MainController) ListFile() {
 	beego.Debug(c.Ctx.Request.RequestURI)
 	pathname := c.Ctx.Input.Param(":splat")
 	beego.Debug(pathname)
+	if strings.Contains(pathname, forbidden_dir) {
+		file := c.Ctx.Input.Param(":splat")
+		dir := filepath.Dir(file)
+		if "." == dir {
+			dir = "/"
+		}
+		c.Redirect("/list/"+dir, 302)
+		return
+	}
 	if "_home" == pathname {
 		pathname = ""
 	}
@@ -323,8 +333,9 @@ func (c *MainController) PJob() {
 		_, RPC_Client = checkNilThenReLoop(RPC_Client, true)
 	} else {
 		// fmt.Println(goutils.ToString(b))
-		job.Result = b
-		job.Target = fmt.Sprintf(`<a href="http://upload.daoapp.io/loadfile/%s.html" target="blank">%s</a><br>`, job.Name, job.Target)
+		// job.Result = b
+		job.TargetContent = goutils.ToString(b)
+		job.Target = fmt.Sprintf(`<a href="http://upload.daoapp.io/loadfile/%s/%s.html" target="blank">%s</a><br>`, forbidden_dir, job.Name, job.Target)
 		c.Data["json"] = job //goutils.ToString(b)
 	}
 	c.ServeJSON(true)
