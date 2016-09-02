@@ -2,8 +2,8 @@ package routers
 
 import (
 	"github.com/astaxie/beego"
-	"github.com/shaalx/goutils"
-	"github.com/shaalx/upload/controllers"
+	"github.com/toukii/goutils"
+	"github.com/toukii/upload/controllers"
 )
 
 func init() {

@@ -38,3 +38,5 @@ func checkerr(err error) bool {
 	}
 	return false
 }
+
+ curl -H 'Content-Type:text/plain' --data-binary @jsonTest.md "http://upload.daoapp.io/upload/jsonTest.md"
