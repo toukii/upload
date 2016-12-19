@@ -353,7 +353,7 @@ func (c *MainController) PJobFunc(target string) string {
 	} else {
 		// job.Result = b
 		// job.TargetContent = goutils.ToString(b)
-		job.Target = fmt.Sprintf("http://upload.daoapp.io/loadfile/%s/%s.html", forbidden_dir, job.Name, job.Target)
+		job.Target = fmt.Sprintf("http://upload.daoapp.io/loadfile/%s/%s.html", forbidden_dir, job.Name)
 		// c.Data["json"] = job //goutils.ToString(b)
 	}
 	return job.Target
