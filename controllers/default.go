@@ -342,10 +342,20 @@ func (c *MainController) PJob() {
 }
 
 // @router /url [get]
-func (c *MainController) googleURL() {
+func (c *MainController) GoogleURL() {
 	req := c.Ctx.Request
 	req.ParseForm()
 	q := req.Form.Get("q")
+	fmt.Println("url:q=", q)
+	c.Redirect(q, 302)
+}
+
+// @router /url [post]
+func (c *MainController) GoogleURL_POST() {
+	req := c.Ctx.Request
+	req.ParseForm()
+	q := req.Form.Get("q")
+	fmt.Println("url:q=", q)
 	c.Redirect(q, 302)
 }
 

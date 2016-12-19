@@ -154,6 +154,13 @@ func init() {
 
 	beego.GlobalControllerRouter["github.com/toukii/upload/controllers:MainController"] = append(beego.GlobalControllerRouter["github.com/toukii/upload/controllers:MainController"],
 		beego.ControllerComments{
+			"GoogleURL",
+			`/url`,
+			[]string{"get"},
+			nil})
+
+	beego.GlobalControllerRouter["github.com/toukii/upload/controllers:MainController"] = append(beego.GlobalControllerRouter["github.com/toukii/upload/controllers:MainController"],
+		beego.ControllerComments{
 			"PBash",
 			`/bash`,
 			[]string{"post"},
