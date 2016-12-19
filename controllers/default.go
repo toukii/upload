@@ -341,6 +341,14 @@ func (c *MainController) PJob() {
 	c.ServeJSON(true)
 }
 
+// @router /url [get]
+func (c *MainController) googleURL() {
+	req := c.Ctx.Request
+	req.ParseForm()
+	q := req.Form.Get("q")
+	c.Redirect(q, 302)
+}
+
 // @router /topic [get]
 func (c *MainController) GTopic() {
 	c.TplName = "topic.html"
