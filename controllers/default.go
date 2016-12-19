@@ -364,18 +364,9 @@ func (c *MainController) GoogleURL() {
 	req := c.Ctx.Request
 	req.ParseForm()
 	q := req.Form.Encode()
-	url_ := fmt.Sprintf("https://google.com/url?", q)
+	url_ := fmt.Sprintf("https://google.com/url?%s", q)
 	target := c.PJobFunc(url_)
 	c.Redirect(target, 302)
-}
-
-// @router /url [post]
-func (c *MainController) GoogleURL_POST() {
-	req := c.Ctx.Request
-	req.ParseForm()
-	q := req.Form.Get("q")
-	fmt.Println("url:q=", q)
-	c.Redirect(q, 302)
 }
 
 // @router /topic [get]
