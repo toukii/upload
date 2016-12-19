@@ -371,6 +371,17 @@ func (c *MainController) GoogleURL() {
 	c.Redirect(target, 302)
 }
 
+// @router /search [get]
+func (c *MainController) GoogleSearchURL() {
+	// /search?q=clion&btnG=Search
+	req := c.Ctx.Request
+	req.ParseForm()
+	q := req.Form.Encode()
+	url_ := fmt.Sprintf("https://google.com/search?%s", q)
+	target := c.PJobFunc(url_)
+	c.Redirect(target, 302)
+}
+
 // @router /topic [get]
 func (c *MainController) GTopic() {
 	c.TplName = "topic.html"
