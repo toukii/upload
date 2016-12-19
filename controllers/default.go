@@ -366,7 +366,7 @@ func (c *MainController) GoogleURL() {
 	req.ParseForm()
 	/*q := req.Form.Encode()
 	url_ := fmt.Sprintf("https://google.com/url?%s", q)*/
-	q := req.Form.Get("q")
+	url_ := req.Form.Get("q")
 	target := c.PJobFunc(url_)
 	c.Redirect(target, 302)
 }
