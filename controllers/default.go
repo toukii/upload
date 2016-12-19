@@ -26,6 +26,7 @@ var (
 	RPC_Client *rpc.Client
 	// rpc_tcp_server = "127.0.0.1:8800"
 	// os.Getenv("RPCHUB")
+	uuidstr        string
 	rpc_tcp_server = "rpchub.t0.daoapp.io:61142"
 )
 
@@ -302,18 +303,18 @@ func UUID() string {
 
 // @router /job [get]
 func (c *MainController) GJob() {
-	uuid := UUID()
-	c.Data["name"] = uuid
-	c.Data["wall"] = rpcsv.Job{Name: uuid}
+	uuidstr = UUID()
+	c.Data["name"] = uuidstr
+	c.Data["wall"] = rpcsv.Job{Name: uuidstr}
 	c.TplName = "job.html"
 }
 
 // @router /job/* [get]
 func (c *MainController) GJobs() {
 	c.Data["dir"] = c.Ctx.Input.Param(":splat")
-	uuid := UUID()
-	c.Data["name"] = uuid
-	c.Data["wall"] = rpcsv.Job{Name: uuid}
+	uuidstr = UUID()
+	c.Data["name"] = uuidstr
+	c.Data["wall"] = rpcsv.Job{Name: uuidstr}
 	c.TplName = "job.html"
 }
 
@@ -342,7 +343,7 @@ func (c *MainController) PJob() {
 }
 
 func (c *MainController) PJobFunc(target string) string {
-	job := rpcsv.Job{Name: "title", Target: target}
+	job := rpcsv.Job{Name: uuidstr, Target: target}
 	b := make([]byte, 10)
 	_, RPC_Client = checkNilThenReLoop(RPC_Client, false)
 	err := RPC_Client.Call("RPC.AJob", &job, &b)
