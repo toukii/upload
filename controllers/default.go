@@ -341,13 +341,32 @@ func (c *MainController) PJob() {
 	c.ServeJSON(true)
 }
 
+func (c *MainController) PJobFunc(target string) string {
+	job := rpcsv.Job{Name: "title", Target: target}
+	b := make([]byte, 10)
+	_, RPC_Client = checkNilThenReLoop(RPC_Client, false)
+	err := RPC_Client.Call("RPC.AJob", &job, &b)
+	if goutils.CheckErr(err) {
+		c.Data["json"] = err
+		_, RPC_Client = checkNilThenReLoop(RPC_Client, true)
+	} else {
+		// job.Result = b
+		// job.TargetContent = goutils.ToString(b)
+		job.Target = fmt.Sprintf("http://upload.daoapp.io/loadfile/%s/%s.html", forbidden_dir, job.Name, job.Target)
+		// c.Data["json"] = job //goutils.ToString(b)
+	}
+	return job.Target
+	// c.ServeJSON(true)
+}
+
 // @router /url [get]
 func (c *MainController) GoogleURL() {
 	req := c.Ctx.Request
 	req.ParseForm()
-	q := req.Form.Get("q")
-	fmt.Println("url:q=", q)
-	c.Redirect(q, 302)
+	q := req.Form.Encode()
+	url_ := fmt.Sprintf("https://google.com/url?", q)
+	target := c.PJobFunc(url_)
+	c.Redirect(target, 302)
 }
 
 // @router /url [post]
