@@ -78,8 +78,9 @@ func (c *MainController) UploadForm() {
 			c.Ctx.WriteString(serr.Error())
 		}
 		c.Redirect("/list/_home", 302)
+	}else{
+		beego.Error(err)
 	}
-	beego.Error(err)
 	c.Redirect("/list/_home", 302)
 }
 
